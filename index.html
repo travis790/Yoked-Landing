@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yoked</title>
+  <meta
+    name="description"
+    content="Yoked helps couples build clarity, connection, and shared direction."
+  />
+  <style>
+    :root {
+      --bg: #000000;
+      --panel: rgba(255,255,255,0.04);
+      --panel-border: rgba(255,255,255,0.10);
+      --text: #ffffff;
+      --muted: rgba(255,255,255,0.64);
+      --soft: rgba(255,255,255,0.36);
+      --button: #ffffff;
+      --button-text: #000000;
+      --max: 1180px;
+      --radius: 28px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Helvetica, Arial, sans-serif;
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .shell {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .bg-glow {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(255,255,255,0.10), transparent 32%),
+        radial-gradient(circle at 85% 78%, rgba(255,255,255,0.06), transparent 24%);
+    }
+
+    .site {
+      position: relative;
+      z-index: 1;
+    }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(18px);
+      background: rgba(0,0,0,0.72);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .nav-inner {
+      min-height: 84px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .brand-logo-wrap {
+      width: 46px;
+      height: 46px;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.03);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .brand-logo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .brand-text {
+      min-width: 0;
+    }
+
+    .brand-title {
+      margin: 0;
+      font-size: 1rem;
+      letter-spacing: 0.28em;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .brand-subtitle {
+      margin: 2px 0 0 0;
+      color: var(--soft);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 52px;
+      padding: 0 24px;
+      border-radius: 18px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      transition: transform 0.18s ease, opacity 0.18s ease, background 0.18s ease;
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+    }
+
+    .button-primary {
+      background: var(--button);
+      color: var(--button-text);
+    }
+
+    .button-secondary {
+      background: rgba(255,255,255,0.03);
+      border-color: rgba(255,255,255,0.10);
+      color: var(--text);
+    }
+
+    .hero {
+      padding: 88px 0 48px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr;
+      gap: 48px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      min-height: 38px;
+      padding: 0 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.04);
+      color: var(--muted);
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.20em;
+    }
+
+    h1 {
+      margin: 20px 0 0;
+      font-size: clamp(2.9rem, 6vw, 5.3rem);
+      line-height: 0.98;
+      letter-spacing: -0.04em;
+      max-width: 900px;
+    }
+
+    .hero-copy {
+      margin: 24px 0 0;
+      max-width: 700px;
+      color: var(--muted);
+      font-size: 1.15rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 34px;
+    }
+
+    .hero-cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 40px;
+      max-width: 760px;
+    }
+
+    .mini-card {
+      padding: 18px;
+      border-radius: 24px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .mini-card-label {
+      margin: 0;
+      color: var(--soft);
+      font-size: 0.70rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+    }
+
+    .mini-card-value {
+      margin: 10px 0 0;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .mock-wrap {
+      position: relative;
+    }
+
+    .mock-glow {
+      position: absolute;
+      inset: 8% 12% auto 12%;
+      height: 160px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      filter: blur(80px);
+      pointer-events: none;
+    }
+
+    .mock-phone {
+      position: relative;
+      max-width: 420px;
+      margin: 0 auto;
+      border-radius: 38px;
+      padding: 14px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.10);
+      box-shadow: 0 0 80px rgba(255,255,255,0.06);
+      backdrop-filter: blur(20px);
+    }
+
+    .mock-inner {
+      border-radius: 28px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: #020202;
+      padding: 22px;
+    }
+
+    .mock-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .mock-label {
+      margin: 0;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+    }
+
+    .mock-sub {
+      margin: 4px 0 0;
+      color: var(--soft);
+      font-size: 0.70rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+    }
+
+    .mock-pill {
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.04);
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .prompt {
+      padding: 18px;
+      border-radius: 24px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      margin-top: 12px;
+    }
+
+    .prompt-label {
+      margin: 0;
+      color: var(--soft);
+      font-size: 0.66rem;
+      text-transform: uppercase;
+      letter-spacing: 0.20em;
+    }
+
+    .prompt-text {
+      margin: 10px 0 0;
+      color: rgba(255,255,255,0.90);
+      font-size: 0.96rem;
+      font-weight: 500;
+    }
+
+    .section {
+      padding: 34px 0 0;
+    }
+
+    .panel-strip {
+      padding: 24px 0 0;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      padding: 28px;
+      border-radius: var(--radius);
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+
+    .card p {
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 0.97rem;
+    }
+
+    .section-head {
+      max-width: 780px;
+      margin-bottom: 26px;
+    }
+
+    .section-kicker {
+      margin: 0;
+      color: var(--soft);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+    }
+
+    .section-head h2 {
+      margin: 16px 0 0;
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      line-height: 1.04;
+      letter-spacing: -0.04em;
+    }
+
+    .section-head p {
+      margin: 16px 0 0;
+      color: var(--muted);
+      font-size: 1.08rem;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .step-num {
+      margin: 0;
+      color: var(--soft);
+      font-size: 0.78rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+    }
+
+    .fit-grid {
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr;
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .fit-list {
+      margin: 18px 0 0;
+      padding-left: 18px;
+      color: rgba(255,255,255,0.88);
+    }
+
+    .fit-list li {
+      margin-bottom: 12px;
+    }
+
+    .faq-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .faq-item {
+      padding: 24px 26px;
+      border-radius: 24px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .faq-item h3 {
+      margin: 0;
+      font-size: 1.06rem;
+    }
+
+    .faq-item p {
+      margin: 12px 0 0;
+      color: var(--muted);
+    }
+
+    .final-cta {
+      text-align: center;
+      padding: 84px 0 96px;
+    }
+
+    .final-cta h2 {
+      margin: 16px auto 0;
+      font-size: clamp(2.2rem, 5vw, 4.2rem);
+      line-height: 1.02;
+      letter-spacing: -0.04em;
+      max-width: 900px;
+    }
+
+    .final-cta p {
+      margin: 18px auto 0;
+      color: var(--muted);
+      max-width: 720px;
+      font-size: 1.08rem;
+    }
+
+    .footer {
+      padding: 22px 0 34px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      color: var(--soft);
+      font-size: 0.92rem;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid,
+      .fit-grid,
+      .grid-3,
+      .steps,
+      .hero-cards {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 56px;
+      }
+
+      .mock-phone {
+        max-width: 100%;
+      }
+
+      .nav-inner {
+        min-height: 76px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .shell {
+        padding: 0 18px;
+      }
+
+      .button {
+        width: 100%;
+      }
+
+      .hero-actions {
+        display: grid;
+      }
+
+      .brand-title {
+        letter-spacing: 0.20em;
+        font-size: 0.92rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-glow"></div>
+
+  <div class="site">
+    <nav class="nav">
+      <div class="shell nav-inner">
+        <div class="brand">
+          <div class="brand-logo-wrap">
+            <img src="logo.png" alt="Yoked logo" class="brand-logo" />
+          </div>
+          <div class="brand-text">
+            <p class="brand-title">YOKED</p>
+            <p class="brand-subtitle">Alignment for couples</p>
+          </div>
+        </div>
+
+        <a class="button button-primary" href="https://yokedco.lovable.app">
+          Begin Getting Yoked
+        </a>
+      </div>
+    </nav>
+
+    <main>
+      <section class="hero shell">
+        <div class="hero-grid">
+          <div>
+            <div class="eyebrow">Built for couples who want real alignment</div>
+            <h1>Get aligned before life and ambition pull you in different directions.</h1>
+            <p class="hero-copy">
+              Yoked is a guided web experience that helps couples slow down, talk honestly,
+              and move forward with shared vision, stronger connection, and clear next steps.
+            </p>
+
+            <div class="hero-actions">
+              <a class="button button-primary" href="https://yokedco.lovable.app">
+                Begin Getting Yoked
+              </a>
+              <a class="button button-secondary" href="#how-it-works">
+                See How It Works
+              </a>
+            </div>
+
+            <div class="hero-cards">
+              <div class="mini-card">
+                <p class="mini-card-label">Vision</p>
+                <p class="mini-card-value">Shared direction</p>
+              </div>
+              <div class="mini-card">
+                <p class="mini-card-label">Connection</p>
+                <p class="mini-card-value">Better conversations</p>
+              </div>
+              <div class="mini-card">
+                <p class="mini-card-label">Action</p>
+                <p class="mini-card-value">Next steps that stick</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="mock-wrap">
+            <div class="mock-glow"></div>
+            <div class="mock-phone">
+              <div class="mock-inner">
+                <div class="mock-top">
+                  <div>
+                    <p class="mock-label">YOKED SESSION</p>
+                    <p class="mock-sub">Vision and alignment check-in</p>
+                  </div>
+                  <div class="mock-pill">Live</div>
+                </div>
+
+                <div class="prompt">
+                  <p class="prompt-label">Prompt</p>
+                  <p class="prompt-text">
+                    Where do we feel most aligned right now, and what is helping that?
+                  </p>
+                </div>
+
+                <div class="prompt">
+                  <p class="prompt-label">Prompt</p>
+                  <p class="prompt-text">
+                    What feels unclear, heavy, or off between us in this season?
+                  </p>
+                </div>
+
+                <div class="prompt">
+                  <p class="prompt-label">Prompt</p>
+                  <p class="prompt-text">
+                    What is one decision or next step we both agree to make this week?
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel-strip shell">
+        <div class="grid-3">
+          <div class="card">
+            <h3>Guided alignment sessions</h3>
+            <p>
+              Structured prompts that help couples get on the same page around vision,
+              goals, money, priorities, and the season they are in.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Built for ambitious couples</h3>
+            <p>
+              Designed for the real tension of marriage, business, family, pressure,
+              and vision when life is moving fast.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Clear, practical, usable</h3>
+            <p>
+              A focused experience that creates honest conversation, shared clarity,
+              and next steps you can actually act on.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section shell" id="how-it-works">
+        <div class="section-head">
+          <p class="section-kicker">How it works</p>
+          <h2>Simple enough to start. Strong enough to actually help.</h2>
+          <p>
+            Yoked is not trying to entertain you. It is built to lead better conversation,
+            surface misalignment, and help couples move forward with clarity.
+          </p>
+        </div>
+
+        <div class="steps">
+          <div class="card">
+            <p class="step-num">01</p>
+            <h3>Open the experience</h3>
+            <p>
+              Start a guided session built to slow you down, surface what matters,
+              and create clarity together.
+            </p>
+          </div>
+          <div class="card">
+            <p class="step-num">02</p>
+            <h3>Work through the prompts</h3>
+            <p>
+              Answer intentional questions around alignment, pressure, goals,
+              and what feels clear or off right now.
+            </p>
+          </div>
+          <div class="card">
+            <p class="step-num">03</p>
+            <h3>Leave aligned</h3>
+            <p>
+              Walk away with better conversation, stronger unity, and practical next steps
+              for your real life.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section shell">
+        <div class="fit-grid">
+          <div class="card">
+            <p class="section-kicker">Why this matters</p>
+            <h2 style="margin:16px 0 0; font-size: clamp(2rem, 4vw, 3.3rem); line-height:1.05; letter-spacing:-0.04em;">
+              Couples do not usually need more content. They need a better framework for the conversations that matter most.
+            </h2>
+            <p style="margin-top:16px;">
+              Ambition is not the issue. Drift is. Pressure is. Unspoken tension is.
+              Yoked gives couples a practical path back to clarity and unity.
+            </p>
+          </div>
+
+          <div class="card">
+            <p class="section-kicker">Best fit for couples navigating</p>
+            <ul class="fit-list">
+              <li>Building a business without losing each other</li>
+              <li>Money pressure, risk, and uneven pace</li>
+              <li>Family decisions that need shared clarity</li>
+              <li>Big goals with limited margin</li>
+              <li>Feeling busy but not deeply aligned</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="section shell">
+        <div class="section-head">
+          <p class="section-kicker">FAQ</p>
+          <h2>What people will ask</h2>
+        </div>
+
+        <div class="faq-list">
+          <div class="faq-item">
+            <h3>Who is Yoked for?</h3>
+            <p>
+              Yoked is for couples who want stronger alignment, better communication,
+              and a clearer shared vision. It is especially valuable for entrepreneurial couples
+              navigating marriage, work, money, family, and ambition at the same time.
+            </p>
+          </div>
+
+          <div class="faq-item">
+            <h3>Is this therapy?</h3>
+            <p>
+              No. Yoked is a guided relationship and alignment tool. It helps couples have
+              intentional conversations with more clarity and less avoidance.
+            </p>
+          </div>
+
+          <div class="faq-item">
+            <h3>Do we both need to use it together?</h3>
+            <p>
+              Yes. Yoked works best when both people step into the conversation
+              and build shared clarity together.
+            </p>
+          </div>
+
+          <div class="faq-item">
+            <h3>How do we start?</h3>
+            <p>
+              Simple. Click the button, open the app, and begin getting yoked.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="final-cta shell">
+        <p class="section-kicker">Ready to start</p>
+        <h2>Stop drifting. Start getting aligned.</h2>
+        <p>
+          The next right step is simple. Open the app and begin the conversation.
+        </p>
+        <div style="margin-top: 28px;">
+          <a class="button button-primary" href="https://yokedco.lovable.app">
+            Begin Getting Yoked
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="shell footer-inner">
+        <div>YOKED</div>
+        <div class="footer-links">
+          <a href="#how-it-works">How it works</a>
+          <a href="https://yokedco.lovable.app">Begin getting yoked</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
